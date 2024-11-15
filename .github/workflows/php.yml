@@ -37,5 +37,5 @@ jobs:
       run: |
         echo "Building PHP application..."
         mkdir build
-        cp -r * build/
+        rsync -av --exclude='build' ./ build/
         echo "Application built successfully."
