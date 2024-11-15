@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  test-and-build:
+  CICD-TEST:
     runs-on: ubuntu-latest
 
     steps:
