@@ -31,3 +31,11 @@ jobs:
     # 4. Chạy kiểm thử với PHPUnit
     - name: Run PHPUnit tests
       run: ./vendor/bin/phpunit --configuration phpunit.xml
+
+    # 5. Build ứng dụng
+    - name: Build application
+      run: |
+        echo "Building PHP application..."
+        mkdir build
+        cp -r * build/
+        echo "Application built successfully."
