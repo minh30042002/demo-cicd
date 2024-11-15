@@ -21,7 +21,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.1' # Chọn phiên bản PHP
+        php-version: '8.3' # Chọn phiên bản PHP
         tools: composer # Cài đặt Composer
 
     # 3. Cài đặt các phụ thuộc
