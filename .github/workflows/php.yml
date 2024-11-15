@@ -38,4 +38,5 @@ jobs:
         echo "Building PHP application..."
         mkdir build
         rsync -av --exclude='build' ./ build/
+        tar -czvf build.tar.gz build/
         echo "Application built successfully."
