@@ -51,4 +51,4 @@ jobs:
 
     - name: Copy files to server
       run: |
-        scp build.tar.gz user@your.server.com:/path/to/your/server/directory
+        scp build.tar.gz mnguyenhoang000@34.87.12.134:/home/webb
