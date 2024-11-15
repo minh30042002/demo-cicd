@@ -40,3 +40,15 @@ jobs:
         rsync -av --exclude='build' ./ build/
         tar -czvf build.tar.gz build/
         echo "Application built successfully."
+   
+    # 6. Cấu hình SSH và sao chép code vào server
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 34.87.12.134 >> ~/.ssh/known_hosts
+
+    - name: Copy files to server
+      run: |
+        scp build.tar.gz user@your.server.com:/path/to/your/server/directory
