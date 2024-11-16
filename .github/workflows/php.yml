@@ -60,4 +60,25 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY_SV }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H 34.142.138.7 >> ~/.ssh/known_hosts
+    
+    - name: Copy files to server
+      run: |
+        scp build.tar.gz mnguyenhoang000@34.142.138.7:/home/webb
+
+
+    - name: Deploy on Server 
+      run: |
+        ssh mnguyenhoang000@34.142.138.7 <<EOF
+          echo "Deploying PHP application on Server ..."
+          
+          # Tạo thư mục và giải nén mã nguon
+          sudo tar -xzvf /home/webb/build.tar.gz -C /var/www/
+          
+          # Thiết lập quyền sở hữu cho thư mục
+          sudo chown -R www-data:www-data /var/www/build
+          sudo chmod -R 755 /var/www/build
+          
+          
+          echo "Deployment completed successfully on Server B."
+        EOF
 
