@@ -42,7 +42,7 @@ jobs:
         echo "Application built successfully."
    
     # 6. Cấu hình SSH và sao chép code vào server
-    - name: Set up SSH key
+    - name: Set up SSH key data
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
@@ -52,3 +52,12 @@ jobs:
     - name: Copy files to server
       run: |
         scp build.tar.gz mnguyenhoang000@34.87.12.134:/home/webb
+
+    # 7. Cấu hình SSH và deloy web lên server
+    - name: Set up SSH key server
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY_SV }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 34.142.138.7 >> ~/.ssh/known_hosts
+
