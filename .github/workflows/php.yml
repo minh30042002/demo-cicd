@@ -75,6 +75,7 @@ jobs:
           sudo tar -xzvf /home/webb/build.tar.gz -C /var/www/
           
           # Thiết lập quyền sở hữu cho thư mục
+          sudo chown -R mnguyenhoang000:www-data /var/www/build
           sudo chown -R www-data:www-data /var/www/build
           sudo chmod -R 755 /var/www/build
           
