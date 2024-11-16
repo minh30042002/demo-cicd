@@ -1,0 +1,85 @@
+name: PHP CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  CICD-TEST:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Kiểm tra code từ repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 2. Thiết lập PHP
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3' # Chọn phiên bản PHP
+        tools: composer # Cài đặt Composer
+
+    # 3. Cài đặt các phụ thuộc
+    - name: Install dependencies
+      run: composer install
+
+    # 4. Chạy kiểm thử với PHPUnit
+    - name: Run PHPUnit tests
+      run: ./vendor/bin/phpunit --configuration phpunit.xml
+
+    # 5. Build ứng dụng
+    - name: Build application
+      run: |
+        echo "Building PHP application..."
+        mkdir build
+        rsync -av --exclude='build' ./ build/
+        tar -czvf build.tar.gz build/
+        echo "Application built successfully."
+   
+    # 6. Cấu hình SSH và sao chép code vào server
+    - name: Set up SSH key data
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 34.87.12.134 >> ~/.ssh/known_hosts
+
+    - name: Copy files to server
+      run: |
+        scp build.tar.gz mnguyenhoang000@34.87.12.134:/home/webb
+
+    # 7. Cấu hình SSH và deloy web lên server
+    - name: Set up SSH key server
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY_SV }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 34.142.138.7 >> ~/.ssh/known_hosts
+    
+    - name: Copy files to server
+      run: |
+        scp build.tar.gz mnguyenhoang000@34.142.138.7:/home/webb
+
+
+    - name: Deploy on Server 
+      run: |
+        ssh mnguyenhoang000@34.142.138.7 <<EOF
+          echo "Deploying PHP application on Server ..."
+          
+          # Tạo thư mục và giải nén mã nguon
+          sudo tar -xzvf /home/webb/build.tar.gz -C /var/www/
+          
+          # Thiết lập quyền sở hữu cho thư mục
+          sudo chown -R mnguyenhoang000:www-data /var/www/build
+          sudo chown -R www-data:www-data /var/www/build
+          sudo chmod -R 755 /var/www/build
+          
+          
+          echo "Deployment completed successfully on Server B."
+        EOF
+
