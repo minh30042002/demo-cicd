@@ -1,1 +1,1 @@
-{"version":1,"defects":[],"times":{"FunctionsTest::testGreetUser":0.444,"FunctionsTest::testCalculateSum":0,"ModuleTest::testGreetUserAndSum":0}}
+{"version":1,"defects":[],"times":{"FunctionsTest::testGreetUser":0.005,"FunctionsTest::testCalculateSum":0,"ModuleTest::testGreetUserAndSum":0}}
