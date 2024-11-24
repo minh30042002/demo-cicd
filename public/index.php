@@ -12,7 +12,7 @@ $message = greetUser($name);
     <title>Simple PHP Page</title>
 </head>
 <body>
-    <h1>Xin chao , T1 da thang cktg, that la vui qua di</h1>
+    <h1>Xin chao , Thay Vu dep trai</h1>
     <p><?php echo $message; ?></p>
 </body>
 </html>
