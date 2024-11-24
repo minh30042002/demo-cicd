@@ -8,7 +8,7 @@ on:
     branches:
       - main
     types:
-      - Open
+      - Closed
 
 jobs:
   CICD-TEST:
@@ -55,6 +55,7 @@ jobs:
         scp build.tar.gz mnguyenhoang000@34.87.12.134:/home/webb
     # 6. Tạo tag mới và đẩy lên GitHub
     - name: Create and push tag
+      if: github.event_name != 'pull_request'
       run: |
         TAG="v$(date +'%Y.%m.%d.%H%M%S')"  # Tạo tag với ngày giờ hiện tại
         git tag $TAG
