@@ -36,6 +36,7 @@ jobs:
 
 # 5. Build ứng dụng
     - name: Build application
+      if: github.event_name != 'pull_request'
       run: |
         echo "Building PHP application..."
         mkdir build
@@ -45,12 +46,14 @@ jobs:
    
     # 6. Cấu hình SSH và sao chép code vào server
     - name: Set up SSH key data
+      if: github.event_name != 'pull_request'
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H 34.87.12.134 >> ~/.ssh/known_hosts
     - name: Copy files to server
+      if: github.event_name != 'pull_request'
       run: |
         scp build.tar.gz mnguyenhoang000@34.87.12.134:/home/webb
     # 6. Tạo tag mới và đẩy lên GitHub
@@ -63,6 +66,7 @@ jobs:
     
     # 7. Cấu hình SSH và deloy web lên server
     - name: Set up SSH key server
+      if: github.event_name != 'pull_request'
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY_SV }}" > ~/.ssh/id_rsa
@@ -70,9 +74,11 @@ jobs:
         ssh-keyscan -H 34.142.138.7 >> ~/.ssh/known_hosts
     
     - name: Copy files to server
+      if: github.event_name != 'pull_request'
       run: |
         scp build.tar.gz mnguyenhoang000@34.142.138.7:/home/webb
-    - name: Deploy on Server 
+    - name: Deploy on Server
+      if: github.event_name != 'pull_request'
       run: |
         ssh mnguyenhoang000@34.142.138.7 <<EOF
           echo "Deploying PHP application on Server ..."
