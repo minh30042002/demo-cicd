@@ -34,7 +34,7 @@ jobs:
     - name: Run PHPUnit tests
       run: ./vendor/bin/phpunit --configuration phpunit.xml
 
-    # 5. Build ứng dụng
+# 5. Build ứng dụng
     - name: Build application
       run: |
         echo "Building PHP application..."
@@ -50,11 +50,9 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H 34.87.12.134 >> ~/.ssh/known_hosts
-
     - name: Copy files to server
       run: |
         scp build.tar.gz mnguyenhoang000@34.87.12.134:/home/webb
-
     # 6. Tạo tag mới và đẩy lên GitHub
     - name: Create and push tag
       run: |
@@ -73,8 +71,6 @@ jobs:
     - name: Copy files to server
       run: |
         scp build.tar.gz mnguyenhoang000@34.142.138.7:/home/webb
-
-
     - name: Deploy on Server 
       run: |
         ssh mnguyenhoang000@34.142.138.7 <<EOF
@@ -91,4 +87,4 @@ jobs:
           
           echo "Deployment completed successfully on Server B."
         EOF
-
+   
