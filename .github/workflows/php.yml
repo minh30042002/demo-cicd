@@ -63,22 +63,38 @@ jobs:
         git fetch --tags  
         
         # Tìm tag lớn nhất bắt đầu với "version "
-        LATEST_TAG=$(git tag --list "version *" | sort -V | tail -n 1 | awk '{print $2}')
+        LATEST_TAG=$(git tag --list "v*" | sort -V | tail -n 1)
         
-        # Nếu không có tag nào, đặt phiên bản đầu tiên là 1
+        # Nếu không có tag nào, đặt phiên bản đầu tiên là v1.0.0
         if [ -z "$LATEST_TAG" ]; then
-        NEXT_VERSION=1
+        NEXT_TAG="v1.0.0"
         else
-        NEXT_VERSION=$((LATEST_TAG + 1))
-        fi
+        # Tách thành phần phiên bản từ tag cuối cùng
+        MAJOR=$(echo "$LATEST_TAG" | awk -F. '{print $1}' | sed 's/v//')
+        MINOR=$(echo "$LATEST_TAG" | awk -F. '{print $2}')
+        PATCH=$(echo "$LATEST_TAG" | awk -F. '{print $3}')
 
-        # Tạo tag mới với phiên bản tiếp theo
-        TAG="version $NEXT_VERSION"
-        echo "Creating tag: $TAG"
-        git tag "$TAG"
+        # Tăng phiên bản
+        if [ "$PATCH" -lt 9 ]; then
+         PATCH=$((PATCH + 1))
+        elif [ "$MINOR" -lt 9 ]; then
+         PATCH=0
+         MINOR=$((MINOR + 1))
+        else
+         PATCH=0
+         MINOR=0
+         MAJOR=$((MAJOR + 1))
+        fi 
+       
+        # Tạo tag mới
+        NEXT_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+         fi
+
+        echo "Creating tag: $NEXT_TAG"
+        git tag "$NEXT_TAG"
 
         # Đẩy tag lên remote
-        git push https://github-actions:${{ secrets.GH_TOKEN }}@github.com/minh30042002/demo-cicd.git "$TAG"
+        git push https://github-actions:${{ secrets.GH_TOKEN }}@github.com/minh30042002/demo-cicd.git "$NEXT_TAG"
     
     # 7. Cấu hình SSH và deloy web lên server
     - name: Set up SSH key server
