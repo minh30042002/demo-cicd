@@ -53,6 +53,13 @@ jobs:
       run: |
         scp build.tar.gz mnguyenhoang000@34.87.12.134:/home/webb
 
+    # 6. Tạo tag mới và đẩy lên GitHub
+    - name: Create and push tag
+      run: |
+        TAG="v$(date +'%Y.%m.%d.%H%M%S')"  # Tạo tag với ngày giờ hiện tại
+        git tag $TAG
+        git push origin $TAG
+    
     # 7. Cấu hình SSH và deloy web lên server
     - name: Set up SSH key server
       run: |
