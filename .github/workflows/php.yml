@@ -58,7 +58,7 @@ jobs:
       run: |
         TAG="v$(date +'%Y.%m.%d.%H%M%S')"  # Tạo tag với ngày giờ hiện tại
         git tag $TAG
-        git push origin $TAG
+        git push https://github-actions:${{ secrets.GH_TOKEN }}@github.com/minh30042002/demo-cicd.git $TAG
     
     # 7. Cấu hình SSH và deloy web lên server
     - name: Set up SSH key server
