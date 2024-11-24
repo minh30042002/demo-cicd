@@ -59,9 +59,26 @@ jobs:
     - name: Create and push tag
       if: github.event_name != 'pull_request'
       run: |
-        TAG="v$(date +'%Y.%m.%d.%H%M%S')"  # Tạo tag với ngày giờ hiện tại
-        git tag $TAG
-        git push https://github-actions:${{ secrets.GH_TOKEN }}@github.com/minh30042002/demo-cicd.git $TAG
+        # Lấy danh sách các tag từ remote
+        git fetch --tags  
+        
+        # Tìm tag lớn nhất bắt đầu với "version "
+        LATEST_TAG=$(git tag --list "version *" | sort -V | tail -n 1 | awk '{print $2}')
+        
+        # Nếu không có tag nào, đặt phiên bản đầu tiên là 1
+        if [ -z "$LATEST_TAG" ]; then
+        NEXT_VERSION=1
+        else
+        NEXT_VERSION=$((LATEST_TAG + 1))
+        fi
+
+        # Tạo tag mới với phiên bản tiếp theo
+        TAG="version $NEXT_VERSION"
+        echo "Creating tag: $TAG"
+        git tag "$TAG"
+
+        # Đẩy tag lên remote
+        git push https://github-actions:${{ secrets.GH_TOKEN }}@github.com/minh30042002/demo-cicd.git "$TAG"
     
     # 7. Cấu hình SSH và deloy web lên server
     - name: Set up SSH key server
